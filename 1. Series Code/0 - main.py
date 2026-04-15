@@ -25,7 +25,7 @@ def style_axis(ax: plt.Axes, time, panel_label, ylabel=None, xlabel=None):
     ax.text(-0.10, 1.1, panel_label, transform=ax.transAxes, fontsize=text_size + 2, fontweight='bold')
 
 def style_3d_axis(ax, idx, panel_label):
-    ax.set_xlabel(r'N $(\times 10^3)$')
+    ax.set_xlabel(r't $(\times 10^4)$')
     ax.set_ylabel('Wavelength (nm)')
     if idx == 0:
         ax.set_zlabel('Intensity (a.u)', rotation=-90)
@@ -93,7 +93,7 @@ plt.rcParams.update({
     'font.size': text_size,
     'axes.linewidth': 1.05,
 })
-colors = ["#E63946", "#164979"]
+colors = ["#E63946", '#0000FF']
 
 # =======================
 # Create figure
@@ -149,7 +149,7 @@ for idx, key in enumerate(orden):
         X[:, ::skip]/1e4, # Scale down x-axis by 10000
         Y[:, ::skip],
         Z[:, ::skip]/1e3, # Scale down z-axis by 1000
-        cmap='inferno', rcount=500, linewidth=0, antialiased=False)
+        cmap='gnuplot2', rcount=500, linewidth=0, antialiased=False)
         
 
     style_3d_axis(ax3d, idx, next(labels))
@@ -162,8 +162,8 @@ for idx, key in enumerate(orden):
 
     # Signal
     ax_sig = axes_signal[idx]
-    ax_sig.plot(t, x, color=colors[1], linewidth=0.5)
-    ax_sig.plot(t, f, color=colors[0], linewidth=0.5)
+    ax_sig.plot(t, x, color=colors[1], linewidth=0.5, alpha=0.5)
+    ax_sig.plot(t, f, color=colors[0], linewidth=0.85)
 
 
     style_axis(
@@ -171,14 +171,14 @@ for idx, key in enumerate(orden):
         time=t,
         panel_label=next(labels),
         ylabel=r'$I_{PCA}(t)$' if idx == 0 else None,
-        xlabel=r'$t~(\times 10^4~\text{a.u.})$'
+        xlabel=r'$t~(\times 10^4)$'
     )
 
     # Residual
     ax_res = axes_residual[idx]
-    ax_res.plot(t, r, color=colors[1], linewidth=0.5)
+    ax_res.plot(t, r, color=colors[1], linewidth=0.5, alpha=0.5)
 
-    style_axis(ax_res, time=t, panel_label=next(labels), ylabel=r'$x(t)$' if idx == 0 else None, xlabel=r'$t~(\times 10^4~\text{a.u.})$')
+    style_axis(ax_res, time=t, panel_label=next(labels), ylabel=r'$x(t)$' if idx == 0 else None, xlabel=r'$t~(\times 10^4)$')
 
 # Adjust layout
 fig.subplots_adjust(left=0.085, 

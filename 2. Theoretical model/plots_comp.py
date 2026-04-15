@@ -20,10 +20,10 @@ def make_histosim_comparison_scatter(I1, I2, QML_data, size_sct, show, burn_frac
         'axes.linewidth': 1.05
     })
     
-    ax.scatter(H_qml[:, 0], H_qml[:, 1], color='red', alpha=0.5, s=size_sct,
-               edgecolors='darkred', marker='s', zorder=3)
-    ax.scatter(H_sim[:, 0], H_sim[:, 1], color='blue', alpha=0.4, s=size_sct,
+    ax.scatter(H_qml[:, 0], H_qml[:, 1], color='#0000FF', alpha=0.5, s=size_sct,
                edgecolors='navy', zorder=3)
+    ax.scatter(H_sim[:, 0], H_sim[:, 1], color='#FF0000', alpha=0.4, s=size_sct,
+               edgecolors='darkred', marker='s', zorder=3)
 
     ax.set_xlabel(r'$x$')
     ax.set_ylabel(r'$P(x)$')

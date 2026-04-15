@@ -1,6 +1,5 @@
 # Created Date: Wednesday, January 7th 2026, 3:48:06 pm
-# Author: Iván R. R. Gonzáles
-# Editor: Nicolas P. Alves
+# Author: Iván R. R. Gonzáles and Nicolas P. Alves
 
 # This code is free to use, modify, and distribute for any purpose,
 # provided that proper credit is given to the original author.

@@ -46,9 +46,8 @@ plt.rcParams.update({
 
 # Define cluster and line colors
 cmap = plt.cm.inferno
-cluster_colors = ['#523030', '#FF0000', '#BFBF00']
-# colors = [cmap(0.85), cmap(0.50), cmap(0.15)] + ["#06AD00", "#6F6F6FFF"]  # ["#0ADB18", "#164979"]
-colors = ['#00FF00', '#BFBF00', '#FF0000', '#523030'] + ['#0000FF']
+cluster_colors = ['#523030', '#FF0000', '#FFFF00']
+colors = ['#00FF00', '#FFFF00', '#FF0000', '#523030', '#0000FF']
 line_styles = ['solid', 'dashed', 'dashed', 'dashed']
 
 # Create the figure and axes
@@ -108,7 +107,7 @@ ax2_bottom.set_ylim(-1, 10)
 for i, df in enumerate(dfs_b):
     if i < 4:
         ax3.plot(df.iloc[:, 0], df.iloc[:, 1],
-                     lw=1.2, color=colors[i], ls=line_styles[i], zorder=0-i)
+                     lw=1.2, color=colors[i], ls=line_styles[i], zorder=i-4 if i != 0 else 0)
     else:
         ax3.scatter(df.iloc[:, 0], df.iloc[:, 1],
                         linewidth=0.9, marker='o', facecolors='none',
@@ -124,9 +123,10 @@ ax3.tick_params(axis='both', which='both', top=True, right=True, direction='in')
 
 # Plot d) f(ε) 
 for i, df in enumerate(dfs_a):
+
     if i < 4:
         ax4.plot(df.iloc[:, 0], df.iloc[:, 1],
-                     lw=1.2, color=colors[i], ls=line_styles[i], zorder=0-i)
+                     lw=1.2, color=colors[i], ls=line_styles[i], zorder=i-4 if i != 0 else 0)
     else:
         ax4.scatter(df.iloc[:, 0], df.iloc[:, 1],
                         linewidth=0.9, marker='o', facecolors='none',
