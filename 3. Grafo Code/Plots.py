@@ -94,7 +94,8 @@ ax2_top.axis('off') #Turn of frame
 for k in range(K):
     idx = cluster_time_indices_2d[k]
     if idx.size:
-        ax2_bottom.scatter(idx/10000, series[idx], s=0.05, color=cluster_colors[k], alpha=0.90)
+        ax2_bottom.scatter(idx/10000, series[idx], s=0.05, color=cluster_colors[k], alpha=0.90, zorder=0-k)
+
 
 ax2_bottom.set_xlabel(r'$t~(\times 10^4~\text{a.u.})$')
 ax2_bottom.set_ylabel(r'$\varepsilon(t)$')
