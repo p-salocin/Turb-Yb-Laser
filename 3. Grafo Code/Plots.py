@@ -21,8 +21,8 @@ from Metagraph_plot import plot_metagraph_with_umap_clusters
 
 # Load precomputed data
 data = np.load('DATA/GRAFO_DATA/plot_series_data.npz', allow_pickle=True)
-files_a = [rf'DATA/GRAFO_DATA/QML_286_plot/P_subplot1_line{i}.csv' for i in range(1, 6)]
-files_b = [rf'DATA/GRAFO_DATA/QML_286_plot/P_subplot2_line{i}.csv' for i in range(1, 6)]
+files_a = [rf'DATA/GRAFO_DATA/QML_286_plot/K_subplot2_line{i}.csv' for i in range(1, 6)]
+files_b = [rf'DATA/GRAFO_DATA/QML_286_plot/K_subplot1_line{i}.csv' for i in range(1, 6)]
 
 # Extract and set variables
 series = data["series"]
@@ -46,16 +46,17 @@ plt.rcParams.update({
 
 # Define cluster and line colors
 cmap = plt.cm.inferno
-cluster_colors = [cmap(0.15), cmap(0.50), cmap(0.85)]
-colors = [cmap(0.85), cmap(0.50), cmap(0.15)] + ["#06AD00", "#6F6F6FFF"]  # ["#0ADB18", "#164979"]
-line_styles = ['dashed', 'dashed','dashed', 'solid']
+cluster_colors = ['#523030', '#FF0000', '#BFBF00']
+# colors = [cmap(0.85), cmap(0.50), cmap(0.15)] + ["#06AD00", "#6F6F6FFF"]  # ["#0ADB18", "#164979"]
+colors = ['#00FF00', '#BFBF00', '#FF0000', '#523030'] + ['#0000FF']
+line_styles = ['solid', 'dashed', 'dashed', 'dashed']
 
 # Create the figure and axes
-fig = plt.figure(figsize=(3.5, 3.2), 
+fig = plt.figure(figsize=(3.5, 3.8), 
                  constrained_layout=False)
 
 # Define grid specification and span of the subplots
-gs = fig.add_gridspec(2,2, width_ratios=[1, 1], height_ratios=[1, 1])
+gs = fig.add_gridspec(2,2, width_ratios=[1, 1], height_ratios=[1, 1.2])
 
 ax0 = fig.add_subplot(gs[0, 0]) 
 ax1 = fig.add_subplot(gs[0, 0])        # Metagraph
@@ -79,7 +80,7 @@ res_meta = plot_metagraph_with_umap_clusters(
     colors=cluster_colors,
     nivel="auto",
     seed=42,
-    scale=6,
+    scale=4.8,
     ax=ax1)
 
 # Plot b) Time series with cluster coloring
@@ -107,17 +108,17 @@ ax2_bottom.set_ylim(-1, 10)
 for i, df in enumerate(dfs_b):
     if i < 4:
         ax3.plot(df.iloc[:, 0], df.iloc[:, 1],
-                     lw=0.9, color=colors[i], ls=line_styles[i], zorder=5-i)
+                     lw=1.2, color=colors[i], ls=line_styles[i], zorder=0-i)
     else:
         ax3.scatter(df.iloc[:, 0], df.iloc[:, 1],
-                        linewidth=0.7, marker='o', facecolors='none',
-                        color=colors[i], s=6, zorder=0)
+                        linewidth=0.9, marker='o', facecolors='none',
+                        color=colors[i], s=5, zorder=-6)
 
 ax3.set_ylabel(r"$P(x)$")
 ax3.set_xlabel(r"$x$")
 ax3.set_yscale('log')
-ax3.set_xlim(-7,7)
-ax3.set_ylim(5e-4,3e0)
+ax3.set_xlim(-10,10)
+ax3.set_ylim(1e-5,3e0)
 ax3.tick_params(axis='both', which='both', top=True, right=True, direction='in')
 
 
@@ -125,11 +126,11 @@ ax3.tick_params(axis='both', which='both', top=True, right=True, direction='in')
 for i, df in enumerate(dfs_a):
     if i < 4:
         ax4.plot(df.iloc[:, 0], df.iloc[:, 1],
-                     lw=0.9, color=colors[i], ls=line_styles[i], zorder=5-i)
+                     lw=1.2, color=colors[i], ls=line_styles[i], zorder=0-i)
     else:
         ax4.scatter(df.iloc[:, 0], df.iloc[:, 1],
-                        linewidth=0.7, marker='o', facecolors='none',
-                        color=colors[i], s=6, zorder=0)
+                        linewidth=0.9, marker='o', facecolors='none',
+                        color=colors[i], s=5, zorder=-6)
 
 ax4.set_ylabel(r"$f(\epsilon)$")
 ax4.set_xlabel(r"$\epsilon$")
