@@ -43,4 +43,4 @@ for k in total_list:
     save_file = os.path.join(output_path, f'cumvar_{k}.npy')
     np.save(save_file, cumulative_variance)
 
-print("All PCA results saved.")
+print("All PCA cumulative variance results saved.")

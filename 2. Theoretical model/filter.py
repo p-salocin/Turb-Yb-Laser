@@ -10,7 +10,6 @@ from scipy.signal import butter, filtfilt
 from scipy.ndimage import uniform_filter1d
 
 
-
 def butterworth_filter(data, fs=100, fc=1, window_size=2000):
     """
     Low-pass Butterworth filter with baseline removal.

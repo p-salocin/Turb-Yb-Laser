@@ -8,7 +8,7 @@
 import numpy as np
 
 
-def histogram_sim(rho1, ymin, ymax):
+def histogram_sim(rho1, xmin, ymax):
     """
     Compute a symmetric normalized histogram with optional negative data reflection.
     
@@ -16,7 +16,7 @@ def histogram_sim(rho1, ymin, ymax):
     -----------
     rho1 : array_like
         Input data array for histogram
-    ymin : float
+    xmin : float
         Minimum value for histogram range
     ymax : float
         Maximum value for histogram range
@@ -27,10 +27,10 @@ def histogram_sim(rho1, ymin, ymax):
         2D array where column 0 is bin centers and column 1 is normalized probabilities
     """
     # Calculate bin width from range divided into 80 segments
-    dybin = (ymax - ymin) / 80
+    dybin = (ymax - xmin) / 80
     
-    # Create bin edges centered between ymin and ymax with 70 bins
-    ybin = np.linspace(ymin + dybin / 2, ymax - dybin / 2, 70)
+    # Create bin edges centered between xmin and ymax with 70 bins
+    ybin = np.linspace(xmin + dybin / 2, ymax - dybin / 2, 70)
     
     # Histogram of positive input data
     qq1, bb1 = np.histogram(rho1, bins=ybin)

@@ -9,13 +9,21 @@
 import numpy as np
 import math
 
+# N=50_000, dt=1e-3, seed=42,
+#     I10=1.0, I20=0.5, nu10=0.05, nu20=0.05,
+#     g11_2=1.0, g11_4=-0.7, g12_4=-0.5,
+#     g22_2=1.0, g22_4=-0.5,
+#     nu01=0.05, nu02=0.05,
+#     gamma1=2.0, gamma2=2.0,
+#     kappa1=0.4, kappa2=0.4,
+#     clamp_nonneg=True):
 
 def milstein_coupled_with_stochastic_variance(
     N=50_000, dt=1e-3, seed=42,
-    I10=1.0, I20=0.5, nu10=0.05, nu20=0.05,
+    I10=1.0, I20=0.5, nu10=0.001, nu20=0.001,
     g11_2=1.0, g11_4=-0.7, g12_4=-0.5,
     g22_2=1.0, g22_4=-0.5,
-    nu01=0.05, nu02=0.05,
+    nu01=0.00, nu02=0.00,
     gamma1=2.0, gamma2=2.0,
     kappa1=0.4, kappa2=0.4,
     clamp_nonneg=True):
@@ -33,7 +41,7 @@ def milstein_coupled_with_stochastic_variance(
     dt : float
         Time step size
     seed : int
-        Random seed for reproducibility
+            
     I10, I20 : float
         Initial conditions for intensities I1, I2
     nu10, nu20 : float
