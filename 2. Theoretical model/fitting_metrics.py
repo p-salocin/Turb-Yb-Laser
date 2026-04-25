@@ -13,7 +13,7 @@ from filter import butterworth_filter
 from histogram import histogram_sim
 
 
-def calculate_fit_metrics(I1, I2, loading_data, burn_frac=0.3, xmin=-10, xmax=10):
+def calculate_fit_metrics(I1, I2, loading_data, burn_frac, xmin, xmax):
     """
     Calculate fitting metrics comparing simulated PCA data with experimental data.
     

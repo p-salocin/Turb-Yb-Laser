@@ -23,7 +23,7 @@ def load_data(file_path, type_archive):
         # Load MATLAB .mat file using scipy
         mat_contents = scipy.io.loadmat(file_path)
         # Extract the specific variable 'QML286' from the loaded data
-        load_data = mat_contents['QML286']
+        load_data = mat_contents['QML286'] # Adjust this key if your variable has a different name in the .mat file
     else:
         # Load NumPy .npy or .npz file
         load_data = np.load(file_path)

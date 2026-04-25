@@ -14,7 +14,7 @@ from optimization import optimize_parameters_for_fit
 from milstein_coupled_eq import milstein_coupled_with_stochastic_variance
 
 
-def run_pipeline(file_path, type_archive, SIM_PARAMS, MODEL_PARAMS, run_optimization=True):
+def run_pipeline(file_path, type_archive, SIM_PARAMS, MODEL_PARAMS, BOUNDS, run_optimization=True):
     """
     Run the complete pipeline for simulating and comparing Yb fiber laser turbulence data.
 
@@ -41,14 +41,14 @@ def run_pipeline(file_path, type_archive, SIM_PARAMS, MODEL_PARAMS, run_optimiza
     data = load_data(file_path, type_archive)
 
     # Step 2: Optimize parameters or use defaults
-    if run_optimization:
-        print(f"\n[2/3] Optimizing parameters to match QML distribution...")
-        opt_params, best_mse, opt_success = optimize_parameters_for_fit(
-            data, xmin=SIM_PARAMS['xmin'], xmax=SIM_PARAMS['xmax']
-        )
+    if run_optimization == True:
+        print(f"\n[2/3] Optimizing parameters to match data distribution...")
+        opt_params, opt_success = optimize_parameters_for_fit(
+            data, SIM_PARAMS, MODEL_PARAMS, BOUNDS)
+        
         print("Optimized Parameters:")
         for k, v in opt_params.items():
-            print(f"  {k:8s}: {v:.4f}")
+            print(f"  {k:8s}: {v:.6f}")
         if not opt_success:
             print("\nOptimization did not converge. Falling back to default MODEL_PARAMS.")
             opt_params = MODEL_PARAMS.copy()
@@ -59,13 +59,10 @@ def run_pipeline(file_path, type_archive, SIM_PARAMS, MODEL_PARAMS, run_optimiza
     # Step 3: Run the Milstein simulation with the chosen parameters
     print(f"\n[3/3] Running final Milstein simulation (N={SIM_PARAMS['N']}, dt={SIM_PARAMS['dt']})")
     I1, I2, nu1, nu2, used_params = milstein_coupled_with_stochastic_variance(
-        N=SIM_PARAMS['N'],
-        dt=SIM_PARAMS['dt'],
-        seed=SIM_PARAMS['seed'],
-        I10=0.5, I20=0.5, nu10=0.05, nu20=0.05,
+        N=SIM_PARAMS['N'], dt=SIM_PARAMS['dt'], seed=SIM_PARAMS['seed'],
+        I10=SIM_PARAMS['I10'], I20=SIM_PARAMS['I20'], nu10=SIM_PARAMS['nu10'], nu20=SIM_PARAMS['nu20'],
         **opt_params
     )
-    print(f"Simulated intensities: I1={I1[-1]:.4f}, I2={I2[-1]:.4f}")
 
     # Return simulation results and data
     return I1, I2, data, used_params, SIM_PARAMS

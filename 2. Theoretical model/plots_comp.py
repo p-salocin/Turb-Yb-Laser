@@ -14,8 +14,8 @@ import matplotlib as mpl
 from fitting_metrics import calculate_fit_metrics
 
 
-def make_histosim_comparison_scatter(I1, I2, loading_data, size_sct, label_name,
-                                     gaussian_fit=False, ax=None, burn_frac=0.2, xmin=-10, xmax=10):
+def make_histosim_comparison_scatter(I1, I2, loading_data, size_sct, label_name, burn_frac, xmin, xmax,
+                                     gaussian_fit=False, ax=None):
     """
     Create a scatter plot comparing histograms of simulated and experimental data.
 

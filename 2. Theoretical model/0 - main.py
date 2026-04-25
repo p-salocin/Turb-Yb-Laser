@@ -18,26 +18,120 @@ from run import run_pipeline
 
 
 # simulation parameters
-SIM_PARAMS = {'N': 50000, 'dt': 1e-3, 'seed': 42, 'burn_frac': 0.3, 'xmin': -6.5, 'xmax': 6.5}
+SIM_PARAMS = {'N': 200000, 'dt': 1e-3,
+            'I10': 0.5, 'I20': 0.5, 'nu10': 0.00001, 'nu20': 0.00001,
+            'seed': 42, 'burn_frac': 0.2, 'xmin': -6.5, 'xmax': 6.5}
 
 # Model parameters for CW and SML
 MODEL_PARAMS_A = {
-    'I10': 0.5, 'I20': 0.5, 'nu10': 0.001, 'nu20': 0.001,
     'g11_2': 1.0, 'g22_2': 1.0,
-    'g11_4': -1.0, 'g22_4': -1.0, 'g12_4': -0.5,
-    'nu01': 0.0000, 'nu02': 0.0000,
-    'gamma1': 1.0, 'gamma2': 1.0,
+    'g11_4': -1.0, 'g22_4': -0.5, 'g12_4': -0.5,
+    'nu01': 0.00005, 'nu02': 0.00005,
+    'gamma1': .5, 'gamma2': .5,
     'kappa1': 0.4, 'kappa2': 0.4,
 }
 
+#     g11_2=1.0, g11_4=-0.7, 
+#     g22_2=1.0, g22_4=-0.5, g12_4=-0.5,
+#     nu01=0.00, nu02=0.00,
+#     gamma1=2.0, gamma2=2.0,
+#     kappa1=0.4, kappa2=0.4,
+
+#     'g11_2': 0.03, 'g22_2': 0.03,
+#     'g11_4': -0.03, 'g22_4': -0.03, 'g12_4': -0.03,
+#     'nu01': 0.001, 'nu02': 0.001,
+#     'gamma1': 0.5, 'gamma2': 0.5,
+#     'kappa1': 0.55, 'kappa2': 0.55
+#         }
+
+BOUNDS_A = [
+        (-5.0, 5.0),        # g11_2
+        (-5.0, 5.0),        # g22_2
+        (-10.0, -0.1),      # g11_4
+        (-10.0, -0.1),      # g22_4
+        (-5.0, 0.0),        # g12_4
+        (-0.1, 0.1),      # nu01
+        (-0.1, 0.1),      # nu02
+        (0.1, 10.0),        # gamma1
+        (0.1, 10.0),        # gamma2
+        (0.1, 5.0),         # kappa1
+        (0.1, 5.0)          # kappa2
+    ]
+
+#  I10=1.0, I20=0.5, nu10=0.001, nu20=0.001,
+#     g11_2=1.0, g11_4=-0.7, g12_4=-0.5,
+#     g22_2=1.0, g22_4=-0.5,
+#     nu01=0.00, nu02=0.00,
+#     gamma1=2.0, gamma2=2.0,
+#     kappa1=0.4, kappa2=0.4,
+
+# initial_params_A = {
+#     'g11_2': 0.03, 'g22_2': 0.03,
+#     'g11_4': -0.03, 'g22_4': -0.03,
+#     'g12_4': -0.03,
+#     'nu01': 0.001, 'nu02': 0.001,
+#     'gamma1': 0.5, 'gamma2': 0.5,
+#     'kappa1': 0.55, 'kappa2': 0.55
+#         }
+
+
+
+
+
+
+
+
+
+
+
 # Model parameters for QML
-MODEL_PARAMS_B = {
-    'I10': 0.5, 'I20': 0.5, 'nu10': 0.05, 'nu20': 0.05,
-    'g11_2': 1.0, 'g22_2': 1.0,
-    'g11_4': -1.0, 'g22_4': -1.0, 'g12_4': -0.5,
-    'nu01': 0.05, 'nu02': 0.05,
-    'gamma1': 2.0, 'gamma2': 2.0,
-    'kappa1': 0.4, 'kappa2': 0.4}
+# MODEL_PARAMS_B = {
+#     'I10': 0.5, 'I20': 0.5, 'nu10': 0.05, 'nu20': 0.05,
+#     'g11_2': 1.0, 'g22_2': 1.0,
+#     'g11_4': -1.0, 'g22_4': -1.0, 'g12_4': -0.5,
+#     'nu01': 0.05, 'nu02': 0.05,
+#     'gamma1': 2.0, 'gamma2': 2.0,
+#     'kappa1': 0.4, 'kappa2': 0.4}
+
+    # # Set default initial parameters if not provided
+    # if initial_params is None:
+    #     initial_params = {
+    #         'g11_2': 0.3, 'g22_2': 0.3,
+    #         'g11_4': -6, 'g22_4': -0.3,
+    #         'g12_4': -0.4,
+    #         'nu01': 0.8, 'nu02': 0.8,
+    #         'gamma1': 0.5, 'gamma2': 0.5,
+    #         'kappa1': 1.5, 'kappa2': 1.5
+    #     }
+
+    # # Parameter names in consistent order for vectorized optimization
+    # param_names = ['g11_2', 'g22_2', 'g11_4', 'g22_4', 'g12_4',
+    #                'nu01', 'nu02', 'gamma1', 'gamma2', 'kappa1', 'kappa2']
+    # initial_values = [initial_params[name] for name in param_names]
+
+    # # Define physical bounds for each parameter
+    # bounds = [
+    #     (-5.0, 5.0),   # g11_2: quadratic self-coupling coefficient for intensity 1
+    #     (-5.0, 5.0),   # g22_2: quadratic self-coupling coefficient for intensity 2
+    #     (-10.0, -0.1), # g11_4: quartic self-coupling coefficient for intensity 1
+    #     (-10.0, -0.1), # g22_4: quartic self-coupling coefficient for intensity 2
+    #     (-5.0, 0.0),   # g12_4: quartic cross-coupling coefficient
+    #     (1e-4, 10),    # nu01: detuning parameter for intensity 1
+    #     (1e-4, 10),    # nu02: detuning parameter for intensity 2
+    #     (0.1, 10.0),   # gamma1: damping rate for intensity 1
+    #     (0.1, 10.0),   # gamma2: damping rate for intensity 2
+    #     (0.1, 5.0),    # kappa1: feedback strength for intensity 1
+    #     (0.1, 5.0)     # kappa2: feedback strength for intensity 2
+    # ]
+
+# N=50_000, dt=1e-3, seed=42,
+#     I10=1.0, I20=0.5, nu10=0.05, nu20=0.05,
+#     g11_2=1.0, g11_4=-0.7, g12_4=-0.5,
+#     g22_2=1.0, g22_4=-0.5,
+#     nu01=0.05, nu02=0.05,
+#     gamma1=2.0, gamma2=2.0,
+#     kappa1=0.4, kappa2=0.4,
+#     clamp_nonneg=True):
 
 
 if __name__ == "__main__":
@@ -54,18 +148,18 @@ if __name__ == "__main__":
     marker_size = 30
 
     # First dataset
-    I1_a, I2_a, data_a, _, SIM_PARAMS = run_pipeline(FILE_PATH_1, 'npy', SIM_PARAMS, MODEL_PARAMS_A, run_optimization=True)
+    I1_a, I2_a, data_a, _, SIM_PARAMS = run_pipeline(FILE_PATH_1, 'npy', SIM_PARAMS, MODEL_PARAMS_A, BOUNDS_A, run_optimization=True)
 
     _, metrics_a = make_histosim_comparison_scatter(
         I1_a, I2_a, data_a,
         size_sct=marker_size,
-        label_name='CW',
-        gaussian_fit=True,
+        label_name='CW', 
         burn_frac=SIM_PARAMS['burn_frac'],
         xmin=SIM_PARAMS['xmin'],
         xmax=SIM_PARAMS['xmax'],
+        gaussian_fit=True,
         ax=axes[0]
-    )
+        )
 
     print("\n" + "-" * 40)
     print("FIT METRICS:")
@@ -76,19 +170,20 @@ if __name__ == "__main__":
     print(f"  sigma(QML experimental):{metrics_a['std_data']:.4f}")
     print("-" * 40)
 
-        # Second dataset
-    I1_b, I2_b, data_b, _, SIM_PARAMS = run_pipeline(FILE_PATH_2, 'npy', SIM_PARAMS, MODEL_PARAMS_A, run_optimization=True)
+    # Second dataset
+    I1_b, I2_b, data_b, _, SIM_PARAMS = run_pipeline(FILE_PATH_2, 'npy', SIM_PARAMS, MODEL_PARAMS_A, BOUNDS_A, run_optimization=True)
 
     _, metrics_b = make_histosim_comparison_scatter(
         I1_b, I2_b, data_b,
         size_sct=marker_size,
-        label_name='SML',
-        gaussian_fit=True,
+        label_name='SML', 
         burn_frac=SIM_PARAMS['burn_frac'],
         xmin=SIM_PARAMS['xmin'],
         xmax=SIM_PARAMS['xmax'],
+        gaussian_fit=True,
         ax=axes[1]
     )
+
     print("\n" + "-" * 40)
     print("FIT METRICS:")
     print(f"  PCA Explained Variance: {metrics_b['explained_variance']:.2f}%")

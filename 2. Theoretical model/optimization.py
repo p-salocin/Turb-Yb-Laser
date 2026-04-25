@@ -11,27 +11,27 @@ from milstein_coupled_eq import milstein_coupled_with_stochastic_variance
 from fitting_metrics import calculate_fit_metrics
 
 
-def optimize_parameters_for_fit(loading_data, initial_params=None, xmin=-10, xmax=10):
+def optimize_parameters_for_fit(loading_data, sim_params, initial_params, bounds):
     """
     Optimize coupled fiber laser model parameters to fit experimental data.
     
-    This function uses L-BFGS-B optimization to tune 11 physical parameters
-    (g11_2, g22_2, g11_4, g22_4, g12_4, nu01, nu02, gamma1, gamma2, kappa1, kappa2)
+    This function uses L-BFGS-B optimization to tune 15 physical parameters
+    (I10, I20, nu10, nu20, g11_2, g22_2, g11_4, g22_4, g12_4, nu01, nu02, gamma1, gamma2, kappa1, kappa2)
     by minimizing the weighted mean squared error between simulated intensity
-    trajectories and experimental quantum-limited measurements.
+    trajectories and experimental data.
     
     Parameters:
     -----------
-    QML_data : array-like
-        Experimental quantum-limited measurement data to fit against
+    loading_data : array-like
+        Experimental data to fit against
+    sim_params : dict
+        Simulation parameters (N, dt, seed, etc.)
     initial_params : dict, optional
         Initial parameter guess. If None, a default set is used.
-        Keys: 'g11_2', 'g22_2', 'g11_4', 'g22_4', 'g12_4', 'nu01', 'nu02',
+        Keys: 'I10', 'I20', 'nu10', 'nu20', 'g11_2', 'g22_2', 'g11_4', 'g22_4', 'g12_4', 'nu01', 'nu02',
               'gamma1', 'gamma2', 'kappa1', 'kappa2'
-    xmin : float, optional
-        Lower bound for data windowing in fit metrics (default: -10)
-    ymax : float, optional
-        Upper bound for data windowing in fit metrics (default: 10)
+    bounds : list of tuples
+        Bounds for each parameter in the same order as initial_params.
     
     Returns:
     --------
@@ -40,63 +40,13 @@ def optimize_parameters_for_fit(loading_data, initial_params=None, xmin=-10, xma
         best_mse (float): Minimum weighted log MSE achieved
         success (bool): Whether optimization converged successfully
     """
-    # # Set default initial parameters if not provided
-    # if initial_params is None:
-    #     initial_params = {
-    #         'g11_2': 0.3, 'g22_2': 0.3,
-    #         'g11_4': -6, 'g22_4': -0.3,
-    #         'g12_4': -0.4,
-    #         'nu01': 0.8, 'nu02': 0.8,
-    #         'gamma1': 0.5, 'gamma2': 0.5,
-    #         'kappa1': 1.5, 'kappa2': 1.5
-    #     }
 
-    # # Parameter names in consistent order for vectorized optimization
-    # param_names = ['g11_2', 'g22_2', 'g11_4', 'g22_4', 'g12_4',
-    #                'nu01', 'nu02', 'gamma1', 'gamma2', 'kappa1', 'kappa2']
-    # initial_values = [initial_params[name] for name in param_names]
-
-    # # Define physical bounds for each parameter
-    # bounds = [
-    #     (-5.0, 5.0),   # g11_2: quadratic self-coupling coefficient for intensity 1
-    #     (-5.0, 5.0),   # g22_2: quadratic self-coupling coefficient for intensity 2
-    #     (-10.0, -0.1), # g11_4: quartic self-coupling coefficient for intensity 1
-    #     (-10.0, -0.1), # g22_4: quartic self-coupling coefficient for intensity 2
-    #     (-5.0, 0.0),   # g12_4: quartic cross-coupling coefficient
-    #     (1e-4, 10),    # nu01: detuning parameter for intensity 1
-    #     (1e-4, 10),    # nu02: detuning parameter for intensity 2
-    #     (0.1, 10.0),   # gamma1: damping rate for intensity 1
-    #     (0.1, 10.0),   # gamma2: damping rate for intensity 2
-    #     (0.1, 5.0),    # kappa1: feedback strength for intensity 1
-    #     (0.1, 5.0)     # kappa2: feedback strength for intensity 2
-    # ]
-
-    initial_params = {
-            'g11_2': 0.03, 'g22_2': 0.03,
-            'g11_4': -0.03, 'g22_4': -0.03,
-            'g12_4': -0.03,
-            'nu01': 0.001, 'nu02': 0.001,
-            'gamma1': 0.5, 'gamma2': 0.5,
-            'kappa1': 0.55, 'kappa2': 0.55
-        }
-
+    # Define parameter names and initial values
     param_names = ['g11_2', 'g22_2', 'g11_4', 'g22_4', 'g12_4',
                    'nu01', 'nu02', 'gamma1', 'gamma2', 'kappa1', 'kappa2']
+    
+    # Create initial parameter vector from dictionary
     initial_values = [initial_params[name] for name in param_names]
-
-    bounds = [
-        (-5.0, 5.0),   # g11_2
-        (-5.0, 5.0),   # g22_2
-        (-10.0, -0.1), # g11_4
-        (-10.0, -0.1), # g22_4
-        (-5.0, 0.0),   # g12_4
-        (0.0001, 0.0001),    # nu01
-        (0.0001, 0.0001),    # nu02
-        (0.1, 10.0),   # gamma1
-        (0.1, 10.0),   # gamma2
-        (0.1, 5.0),    # kappa1
-        (0.1, 5.0)     # kappa2
-    ]
 
     def objective_function(params):
         """
@@ -111,14 +61,15 @@ def optimize_parameters_for_fit(loading_data, initial_params=None, xmin=-10, xma
         try:
             # Run coupled stochastic differential equations simulation
             I1, I2, _, _, _ = milstein_coupled_with_stochastic_variance(
-                N=50000, dt=1e-3, seed=42,
-                I10=0.5, I20=0.5,
-                **param_dict
-            )
+                N=sim_params['N'], dt=sim_params['dt'], seed=sim_params['seed'],
+                I10=sim_params['I10'], I20=sim_params['I20'], nu10=sim_params['nu10'], nu20=sim_params['nu20'],
+                **param_dict)
+            
             # Calculate fit metrics against experimental data
             info = calculate_fit_metrics(I1, I2, loading_data,
-                                         burn_frac=0.3,
-                                         xmin=xmin, xmax=xmax)
+                                         burn_frac=sim_params['burn_frac'],
+                                         xmin=sim_params['xmin'], xmax=sim_params['xmax'])
+            
             return info['mse_log_weighted']
         except Exception:
             # Return penalty value if simulation fails
@@ -138,4 +89,6 @@ def optimize_parameters_for_fit(loading_data, initial_params=None, xmin=-10, xma
     # Report results
     print(f"Optimization finished. Success: {success}")
     print(f"Best Weighted MSE (log): {best_mse:.6f}\n")
-    return optimized_params, best_mse, success
+
+    
+    return optimized_params, success

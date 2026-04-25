@@ -24,7 +24,7 @@ from Relabel_mean import relabel_by_mean
 
 
 # Set up variables and parameters
-mat_path  = r'Data\Bet286.mat'
+mat_path  = r'DATA\GRAFO_DATA\Bet286.mat'
 var_name  = 'Bet286'
 window_size = 80
 SEED = 42

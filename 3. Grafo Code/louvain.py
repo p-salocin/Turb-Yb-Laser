@@ -7,7 +7,7 @@
 
 
 # Defining function
-def _louvain_levels(G):
+def louvain_levels(G):
     """
     Compute the hierarchical community structure of a graph using the Louvain method.
 

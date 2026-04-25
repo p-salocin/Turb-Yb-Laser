@@ -4,28 +4,13 @@
 # This code is free to use, modify, and distribute for any purpose,
 # provided that proper credit is given to the original author.
 
-
 # Import necessary libraries
 import numpy as np
 import math
 
-# N=50_000, dt=1e-3, seed=42,
-#     I10=1.0, I20=0.5, nu10=0.05, nu20=0.05,
-#     g11_2=1.0, g11_4=-0.7, g12_4=-0.5,
-#     g22_2=1.0, g22_4=-0.5,
-#     nu01=0.05, nu02=0.05,
-#     gamma1=2.0, gamma2=2.0,
-#     kappa1=0.4, kappa2=0.4,
-#     clamp_nonneg=True):
 
-def milstein_coupled_with_stochastic_variance(
-    N=50_000, dt=1e-3, seed=42,
-    I10=1.0, I20=0.5, nu10=0.001, nu20=0.001,
-    g11_2=1.0, g11_4=-0.7, g12_4=-0.5,
-    g22_2=1.0, g22_4=-0.5,
-    nu01=0.00, nu02=0.00,
-    gamma1=2.0, gamma2=2.0,
-    kappa1=0.4, kappa2=0.4,
+def milstein_coupled_with_stochastic_variance(N, dt, seed, I10, I20, nu10, nu20,
+    g11_2, g11_4, g12_4, g22_2, g22_4, nu01, nu02, gamma1, gamma2, kappa1, kappa2,
     clamp_nonneg=True):
     
     """
