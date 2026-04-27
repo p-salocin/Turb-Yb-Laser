@@ -14,7 +14,7 @@ from optimization import optimize_parameters_for_fit
 from milstein_coupled_eq import milstein_coupled_with_stochastic_variance
 
 
-def run_pipeline(file_path, type_archive, SIM_PARAMS, MODEL_PARAMS, BOUNDS, run_optimization=True):
+def run_pipeline(file_path, type_archive, SIM_PARAMS, MODEL_PARAMS, BOUNDS, run_optimization=False):
     """
     Run the complete pipeline for simulating and comparing Yb fiber laser turbulence data.
 
@@ -26,7 +26,7 @@ def run_pipeline(file_path, type_archive, SIM_PARAMS, MODEL_PARAMS, BOUNDS, run_
     type_archive (str): Type of the data archive ('mat' for MATLAB, otherwise NumPy).
     SIM_PARAMS (dict): Dictionary containing simulation parameters (e.g., N, dt, seed, xmin, xmax).
     MODEL_PARAMS (dict): Dictionary of default model parameters for the simulation.
-    run_optimization (bool, optional): Whether to perform parameter optimization. Default is True.
+    run_optimization (bool, optional): Whether to perform parameter optimization. Default is False.
 
     Returns:
     I1 (array): Simulated intensity array for the first component.
@@ -41,6 +41,7 @@ def run_pipeline(file_path, type_archive, SIM_PARAMS, MODEL_PARAMS, BOUNDS, run_
     data = load_data(file_path, type_archive)
 
     # Step 2: Optimize parameters or use defaults
+    # Note: Optimization function needs to be revised and restructured to work properly.
     if run_optimization == True:
         print(f"\n[2/3] Optimizing parameters to match data distribution...")
         opt_params, opt_success = optimize_parameters_for_fit(

@@ -10,6 +10,8 @@ from scipy.optimize import minimize
 from milstein_coupled_eq import milstein_coupled_with_stochastic_variance
 from fitting_metrics import calculate_fit_metrics
 
+# OPTIMIZATION FUNCTION FOR MODEL FITTING - CURRENTLY NOT IN USE. 
+# FUNCTION NEEDS TO BE REVISED AND RESTRUCTURED TO WORK PROPERLY.
 
 def optimize_parameters_for_fit(loading_data, sim_params, initial_params, bounds):
     """
