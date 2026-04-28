@@ -13,11 +13,27 @@ from low_pass_filter import lp_filter
 
 base_path = Path('DATA/PCA_TIME_SERIES/MULTI_PC_COMP')
 
-files = {
+files_CW = {
+    'CW_1': 'CW_PC_1_TIME_SERIES_147_0.npy',
+    'CW_2': 'CW_PC_2_TIME_SERIES_147_0.npy',
+    'CW_3': 'CW_PC_3_TIME_SERIES_147_0.npy'
+}
+
+files_QML = {
     'QML_1': 'QML_PC_1_TIME_SERIES_286_0.npy',
     'QML_2': 'QML_PC_2_TIME_SERIES_286_0.npy',
     'QML_3': 'QML_PC_3_TIME_SERIES_286_0.npy'
 }
+
+files_SML = {
+    'SML_1': 'SML_PC_1_TIME_SERIES_690_0.npy',
+    'SML_2': 'SML_PC_2_TIME_SERIES_690_0.npy',
+    'SML_3': 'SML_PC_3_TIME_SERIES_690_0.npy'
+}
+
+names_cw = ['CW_1', 'CW_2', 'CW_3']
+names_qml = ['QML_1', 'QML_2', 'QML_3']
+names_sml = ['SML_1', 'SML_2', 'SML_3']
 
 panel_labels = ['A', 'B', 'C']
 y_labels = [r'$x_{PCA_{(1)}}(t)$', r'$x_{PCA_{(1+2)}}(t)$', r'$x_{PCA_{(1+2+3)}}(t)$']
@@ -26,7 +42,7 @@ cmap = plt.cm.winter
 colors_list = [cmap(0), cmap(0.3), cmap(0.6)][::-1]
 
 series, filtered, residue = {}, {}, {}
-for key, fname in files.items():
+for key, fname in files_CW.items():
     data = np.load(base_path / fname)
     f = lp_filter(data)
     r = data.flatten() - f
@@ -47,7 +63,7 @@ fig, axes = plt.subplots(3, 1, figsize=(7.2, 4.2),
                          sharex=True, 
                          constrained_layout=True)
 
-for idx, key in enumerate(['QML_1', 'QML_2', 'QML_3']):
+for idx, key in enumerate(names_cw):
     ax = axes[idx]
     t = np.arange(len(series[key])) / 1e4
     ax.plot(t, residue[key], label='Original', color=colors_list[idx], linewidth=0.1, alpha=0.7)
@@ -55,10 +71,11 @@ for idx, key in enumerate(['QML_1', 'QML_2', 'QML_3']):
     if idx == 2:
         ax.set_xlabel(r'$t~(\times 10^4)$')
     ax.set_xlim(min(t), max(t))
-    ax.set_ylim(-4500, 4500)
+    # ax.set_ylim(-4500, 4500)
     ax.tick_params(axis='both', which='both', direction='in')
     ax.text(-0.10, 1.1, panel_labels[idx], transform=ax.transAxes, fontsize=text_size + 2, fontweight='bold')
 
-plt.savefig('FIGURES/SM_Figure_3.pdf', dpi=300)
+plt.show()
+#plt.savefig('FIGURES/SM_Figure_3.pdf', dpi=300)
 
 
