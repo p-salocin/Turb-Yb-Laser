@@ -48,27 +48,27 @@ for i in range(len(total_list)):
     # Perform Singular Value Decomposition (SVD) on the centered data.
     U, S, VT = np.linalg.svd(centered_data, full_matrices=0)
 
+    # Obtain the explained_variance
+    explained_variance = (S**2) / np.sum(S**2)
+    cumulative_variance = np.cumsum(explained_variance)
+
     # List to save the scores
     scores = []
 
     # Save the fisrt three scores
     for j in range(total_sum):
-        scores.append(S[j]*U.T[j])
+        scores.append(explained_variance[j]*S[j]*U.T[j])
 
     # Produce the culmulative sum for the first scores
     cumulative_scores = np.cumsum(scores, axis=0)
 
     for k in range(len(cumulative_scores)):
-        filename = f"{files_names[i]}_{k+1}_TIME_SERIES_{total_list[i]}_0.npy"
+        filename = f"W_{files_names[i]}_{k+1}_TIME_SERIES_{total_list[i]}_0.npy"
         filepath = os.path.join(out_path_2, filename)
-        #np.save(filepath, cumulative_scores[k])
-
-    # Obtain the explained_variance
-    explained_variance = (S**2) / np.sum(S**2)
-    cumulative_variance = np.cumsum(explained_variance)
+        np.save(filepath, cumulative_scores[k])
 
     # Save results
     save_file = os.path.join(output_path, f'cumvar_{total_list[i]}.npy')
-    # np.save(save_file, cumulative_variance)
+    np.save(save_file, cumulative_variance)
 
 print("All PCA cumulative variance and scores results saved.")
